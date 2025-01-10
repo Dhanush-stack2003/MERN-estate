@@ -1,14 +1,16 @@
-const dotenv = require('dotenv')
+import userRouter from './routes/user.route.js';
 
-const express = require('express')
+import dotenv from 'dotenv';
 
-const mongodb = require('mongoose')
+import express from 'express';
+
+import mongodb from 'mongoose'
 
 const app = express();
 
 dotenv.config();
 
-mongodb.connect(process.env.MONGODB).then(()=>console.log("mongodb connected")).catch((err)=>console.log(err))
+ mongodb.connect(process.env.MONGODB).then(()=>console.log("mongodb connected")).catch((err)=>console.log(err))
 
 app.listen(3000,(err)=>{
     if(err){
@@ -18,3 +20,5 @@ app.listen(3000,(err)=>{
         console.log("you are now connected on 3000")
     }
 })
+
+app.use('/api/user',userRouter)
