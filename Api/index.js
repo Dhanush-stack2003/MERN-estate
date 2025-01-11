@@ -8,7 +8,11 @@ import express from 'express';
 
 import mongodb from 'mongoose';
 
+import cors from 'cors';
+
 const app = express();
+
+app.use(cors())
 
 app.use(express.json());
 
@@ -27,11 +31,12 @@ app.listen(3000,(err)=>{
 
 app.use('/api/user',userRouter)
 app.use('/api/auth',authRouter)
+app.use('/api/auth',authRouter)
 
 app.use((err,req,res,next)=>{
-    const statusCode = err.statusCode | 500;
+    const statusCode = err.statusCode || 500;
     const message = err.message || "internal server error";
-    return res.json({
+    return res.send({
         success:false,
         statusCode,
         message
