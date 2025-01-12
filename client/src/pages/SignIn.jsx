@@ -11,7 +11,7 @@ export default function SignIn() {
   });
 
   const formHandler = (e) => {
-    setSignIn({ ...signup, [e.target.name]: e.target.value });
+    setSignIn({ ...signIn, [e.target.name]: e.target.value });
   };
 
   const submitHandler = async (e) => {
@@ -23,7 +23,7 @@ export default function SignIn() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(signup),
+        body: JSON.stringify(signIn),
       });
       const data = await res.json();
       if (data.success === false) {
@@ -49,7 +49,7 @@ export default function SignIn() {
           name="email"
           placeholder="email"
           id="email"
-          value={signup.email}
+          value={signIn.email}
           className="border p-3 rounded-lg"
           onChange={formHandler}
         />
@@ -57,7 +57,7 @@ export default function SignIn() {
           name="password"
           placeholder="password"
           id="password"
-          value={signup.password}
+          value={signIn.password}
           className="border p-3 rounded-lg"
           onChange={formHandler}
         />

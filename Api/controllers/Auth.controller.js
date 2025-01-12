@@ -10,8 +10,7 @@ export const signup = async (req, res, next) => {
     const user = User({ username, email, password: HashedPassword });
     await user.save();
     console.log(user);
-    res.status(201).json("new user created");
-    res.redirect('/sign-in')
+    res.status(201).json(user);
   }catch (err) {
     console.log(err.message);
     next(err);
@@ -26,10 +25,11 @@ export const signin = async (req, res, next) => {
     const passwordCheck = bcrypt.compareSync(password, validUser.password);
     if (!passwordCheck) return next(errorHandler(404, "wrong credentials!"));
     const jwtToken = jwt.sign({ id: validUser._id }, process.env.JSON_TOKEN);
-    const { password: pass, ...rest } = validUser._id;
+    const { password: pass, ...rest } = validUser._doc;
     res.cookie("ACCESS_TOKEN", jwtToken, { httpOnly: true });
     res.status(200);
     res.json(rest);
+    console.log(rest);
   } catch (err) {
     next(err.message);
   }
