@@ -1,5 +1,3 @@
-import userRouter from './routes/user.route.js';
-
 import authRouter from './routes/Auth.route.js';
 
 import dotenv from 'dotenv';
@@ -8,11 +6,7 @@ import express from 'express';
 
 import mongodb from 'mongoose';
 
-import cors from 'cors';
-
 const app = express();
-
-app.use(cors())
 
 app.use(express.json());
 
@@ -29,7 +23,7 @@ app.listen(3000,(err)=>{
     }
 })
 
-app.use('/api/user',userRouter)
+app.use('/api/auth',authRouter)
 app.use('/api/auth',authRouter)
 app.use('/api/auth',authRouter)
 
