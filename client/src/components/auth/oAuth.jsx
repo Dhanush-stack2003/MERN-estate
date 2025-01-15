@@ -1,11 +1,13 @@
 import React from 'react'
 import {signInWithPopup,getAuth,GoogleAuthProvider } from 'firebase/auth'
 import { app } from '../../../firebase';
-import { useDispatch } from 'react-redux';
+import { useDispatch} from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { signinSuccess,signinFailure,signinStart } from '../../redux/user/userSlice'
 
 export default function Oauth() {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const googleAuthendicator =async () => {
     try{
     const provider =new GoogleAuthProvider();
@@ -29,6 +31,7 @@ export default function Oauth() {
       dispatch(signinFailure(res.message))
     }
     dispatch(signinSuccess(res))
+    navigate('/profile')
   }catch(error){
     dispatch(signinFailure(error))
     console.log("unable to process "+error)

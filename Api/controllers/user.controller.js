@@ -10,7 +10,7 @@ export const text = (req, res)=>{
 
 
 export const updateUser = async (req,res,next) => {
-   if(req.user.id !== req.params.id) return next(ErrorHandler(401,"you are allow change your credentials only"))
+   if(req.user.id !== req.params.id) return next(ErrorHandler(401,"you can change your credentials only"))
 try{
    if(req.body.password){
       req.body.password = bcrypt.hashSync(req.body.password,10)
