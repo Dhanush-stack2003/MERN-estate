@@ -1,6 +1,10 @@
 import authRouter from './routes/Auth.route.js';
 
+import userRouter from './routes/user.route.js'
+
 import dotenv from 'dotenv';
+
+import cookieParser from 'cookie-parser';
 
 import express from 'express';
 
@@ -9,6 +13,8 @@ import mongodb from 'mongoose';
 const app = express();
 
 app.use(express.json());
+
+app.use(cookieParser())
 
 dotenv.config();
 
@@ -24,6 +30,7 @@ app.listen(3000,(err)=>{
 })
 
 app.use('/api/auth',authRouter)
+app.use('/api/user',userRouter)
 
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
