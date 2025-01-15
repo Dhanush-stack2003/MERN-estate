@@ -11,7 +11,7 @@ export const signup = async (req, res, next) => {
     await user.save();
     console.log(user);
     const {password:pass,...rest} = user
-    res.status(201).json(rest);c
+    res.status(201).json(rest);
   }catch (err) {
     console.log(err.message);
     next(err);

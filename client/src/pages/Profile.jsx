@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { useSelector,useDispatch } from 'react-redux'
-import { updateUserStart,updateUserFailure,updateUserSuccess } from '../redux/user/userSlice';
+import { redirect, useNavigate } from 'react-router-dom';
+import { updateUserStart,updateUserFailure,updateUserSuccess,deleteUserStart,deleteUserFailure,deleteUserSuccess } from '../redux/user/userSlice';
 
 export default function Profile() {
 
   const { currentUser} = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData,setFormData] = useState({});
   const [loading,setLoading] = useState(false);
@@ -42,6 +44,23 @@ export default function Profile() {
   const formDataHandler = (e) => {
     setFormData({...formData,[e.target.id]:e.target.value})
   }
+
+  const deleteHandler =async () => {
+    try{
+    const user = await fetch(`/api/user/delete/${currentUser._id}`,{
+      method:'DELETE',
+      credentials:"include"
+    })
+    const res = await user.json();
+    if(res.success === false){
+      dispatch(deleteUserFailure(res.message))
+    }
+    dispatch(deleteUserSuccess(res))
+    navigate("/sign-in");
+  }catch(error){
+    dispatch(deleteUserFailure(error))
+  }
+  }
   
   return (
     <div className='max-w-xl mx-auto'>
@@ -55,7 +74,7 @@ export default function Profile() {
         <button className='bg-green-700 text-white p-3 uppercase rounded-lg hover:opacity-90 disabled:opacity-65' onClick={()=>setUpdated(true)}>{loading ? 'Loading...' : 'Update' }</button>
       </form>
       <div className='flex justify-between my-4'>
-        <span className='text-red-700'>Delete account</span>
+        <span className='text-red-700 cursor-pointer' onClick={deleteHandler}>Delete account</span>
         <span className='text-red-700'>Sign out</span>
       </div>
       <p className='text-red-700 my-5'>{error ? currentUser.message : ''}</p>

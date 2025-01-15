@@ -31,3 +31,14 @@ try{
    next(error)
 }
 }
+
+export const deleteUser =async (req,res,next) => {
+   if(req.user.id !== req.params.id) return next(ErrorHandler(401,"you can delete your account only"))
+      try {
+        await User.findByIdAndDelete(req.params.id)
+        res.clearCookie('ACCESS_TOKEN',{httpOnly:true})
+        res.status(200).json("user deleted")
+      } catch (error) {
+         next(error)
+      }
+}
