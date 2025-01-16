@@ -1,5 +1,6 @@
 import User from "../models/user-model.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
+import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
 export const text = (req, res)=>{
