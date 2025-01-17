@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector,useDispatch } from 'react-redux'
-import {  useNavigate } from 'react-router-dom';
+import {  Link, useNavigate } from 'react-router-dom';
 import { 
   updateUserStart,updateUserFailure,
   updateUserSuccess,deleteUserStart,deleteUserFailure
@@ -89,6 +89,9 @@ export default function Profile() {
         <input type='email' placeholder='Email' className='p-3'id='email' defaultValue={currentUser.email} onChange={formDataHandler}/> 
         <input type='password' placeholder='Password' className='p-3' id='password' onChange={formDataHandler}/> 
         <button className='bg-green-700 text-white p-3 uppercase rounded-lg hover:opacity-90 disabled:opacity-65' onClick={()=>setUpdated(true)}>{loading ? 'Loading...' : 'Update' }</button>
+        <Link to='/create-list'>
+        <button className='bg-green-700 p-3 rounded-lg text-center uppercase hover:opacity-90 disabled:opacity-80'>Create Listing</button>
+        </Link>
       </form>
       <div className='flex justify-between my-4'>
         <span className='text-red-700 cursor-pointer' onClick={deleteHandler}>Delete account</span>
