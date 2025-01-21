@@ -11,7 +11,6 @@ import {
 export default function Profile() {
 
   const { currentUser} = useSelector((state) => state.user);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData,setFormData] = useState({});
   const [loading,setLoading] = useState(false);
@@ -64,7 +63,7 @@ export default function Profile() {
     dispatch(deleteUserFailure(error))
   }}
 
-
+console.log(currentUser)
   const signOutHandler =async () => {
     try{
     dispatch(SignOutUserStart())
@@ -78,27 +77,64 @@ export default function Profile() {
     dispatch(SignOutUserFailure(error))
   }
   }
+
   
   return (
-    <div className='max-w-xl mx-auto'>
-      <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
-      <form className='flex flex-col gap-5' onClick={formDataSubmit}>
-        <img src={currentUser.image}  alt='profile'
-         className='object-cover rounded-full h-24 w-24 self-center'/>
-        <input type='text' placeholder='Username' className='p-3'id='username' defaultValue={currentUser.username} onChange={formDataHandler}/> 
-        <input type='email' placeholder='Email' className='p-3'id='email' defaultValue={currentUser.email} onChange={formDataHandler}/> 
-        <input type='password' placeholder='Password' className='p-3' id='password' onChange={formDataHandler}/> 
-        <button className='bg-green-700 text-white p-3 uppercase rounded-lg hover:opacity-90 disabled:opacity-65' onClick={()=>setUpdated(true)}>{loading ? 'Loading...' : 'Update' }</button>
-        <Link to='/create-list'>
-        <button className='bg-green-700 p-3 rounded-lg text-center uppercase hover:opacity-90 disabled:opacity-80'>Create Listing</button>
+    <div className="max-w-xl mx-auto">
+      <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
+      <form className="flex flex-col gap-5" onSubmit={formDataSubmit}>
+        <img
+          src={currentUser.image}
+          alt="profile"
+          className="object-cover rounded-full h-24 w-24 self-center"
+        />
+        <input
+          type="text"
+          placeholder="Username"
+          className="p-3"
+          id="username"
+          defaultValue={currentUser.username}
+          onChange={formDataHandler}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          className="p-3"
+          id="email"
+          defaultValue={currentUser.email}
+          onChange={formDataHandler}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="p-3"
+          id="password"
+          onChange={formDataHandler}
+        />
+        <button
+          className="bg-slate-700 text-white p-3 uppercase rounded-lg hover:opacity-90 disabled:opacity-65"
+          onClick={() => setUpdated(true)}
+        >
+          {loading ? "Loading..." : "Update"}
+        </button>
+        <Link to="/create-list">
+          <button className="bg-green-700 text-white p-3 rounded-lg w-full uppercase hover:opacity-90 disabled:opacity-80">
+            Create Listing
+          </button>
         </Link>
       </form>
-      <div className='flex justify-between my-4'>
-        <span className='text-red-700 cursor-pointer' onClick={deleteHandler}>Delete account</span>
-        <span className='text-red-700 cursor-pointer' onClick={signOutHandler}>Sign out</span>
+      <div className="flex justify-between my-4">
+        <span className="text-red-700 cursor-pointer" onClick={deleteHandler}>
+          Delete account
+        </span>
+        <span className="text-red-700 cursor-pointer" onClick={signOutHandler}>
+          Sign out
+        </span>
       </div>
-      <p className='text-red-700 my-5'>{error ? currentUser.message : ''}</p>
-      <p className='text-green-700 my-5 '>{!error && update ? 'changes updated'  : ''}</p>
+      <p className="text-red-700 my-5">{error ? currentUser.message : ""}</p>
+      <p className="text-green-700 my-5 ">
+        {!error && update ? "changes updated" : ""}
+      </p>
     </div>
-  )
+  );
 }

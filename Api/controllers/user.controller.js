@@ -36,8 +36,9 @@ try{
 export const deleteUser =async (req,res,next) => {
    if(req.user.id !== req.params.id) return next(ErrorHandler(401,"you can delete your account only"))
       try {
+       const jwtToken = jwt.verify(process.env.JSON_TOKEN)
         await User.findByIdAndDelete(req.params.id)
-        res.clearCookie('ACCESS_TOKEN',{httpOnly:true})
+        res.clearCookie('ACCESS_TOKEN',jwtToken,{httpOnly:true})
         res.status(200).json("user deleted")
       } catch (error) {
          next(error)

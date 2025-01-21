@@ -33,7 +33,7 @@ const ListSchema =new mongoose.Schema({
         type:Boolean,
         require:true
     },
-    parking:{
+    parkingSpot:{
         type:Boolean,
         require:true
     },

@@ -7,9 +7,8 @@ export const signup = async (req, res, next) => {
   try{
     const { username, email, password } = req.body;
     const HashedPassword = bcrypt.hashSync(password, 10);
-    const user = User({ username, email, password: HashedPassword });
+    const user =await User({ username, email, password: HashedPassword });
     await user.save();
-    console.log(user);
     const {password:pass,...rest} = user
     res.status(201).json(rest);
   }catch (err) {
@@ -30,7 +29,6 @@ export const signin = async (req, res, next) => {
     res.cookie("ACCESS_TOKEN", jwtToken, { httpOnly: true });
     res.status(200);
     res.json(rest);
-    console.log(rest);
   } catch (err) {
     next(err.message);
   }
@@ -43,7 +41,7 @@ export const google = async(req,res,next) => {
       const jwtToken = jwt.sign({id:userVerify._id},process.env.JSON_TOKEN);
       const {password:pass,...rest} = userVerify._doc;
       res.cookie('ACCESS_TOKEN',jwtToken,{httpOnly:true})
-      res.status(200)
+      res.status(201)
       res.json(rest)
     }else{
     const generatePassword =
@@ -61,9 +59,9 @@ export const google = async(req,res,next) => {
     res.cookie('ACCESS_TOKEN',jwtToken,{ httpOnly:true })
     res.status(200)
     res.json(rest)
-    }
-  }catch(error){
-    next(error)
+  }
+}catch(error){
+  next(error)
 }}
 
 export const signOut = (req,res,next) =>{ 
