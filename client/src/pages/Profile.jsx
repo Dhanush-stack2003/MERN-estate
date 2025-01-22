@@ -15,7 +15,9 @@ export default function Profile() {
   const [formData,setFormData] = useState({});
   const [loading,setLoading] = useState(false);
   const [update,setUpdated] = useState(false);
-  const [error,setError] = useState(false)
+  const [error,setError] = useState(false);
+  const [showListing,setShowListing] = useState([]);
+  const [listingError,setListingError] = useState(false);
 
   const formDataSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +65,6 @@ export default function Profile() {
     dispatch(deleteUserFailure(error))
   }}
 
-console.log(currentUser)
   const signOutHandler =async () => {
     try{
     dispatch(SignOutUserStart())
@@ -75,9 +76,31 @@ console.log(currentUser)
     SignOutUserSuccess(data)
   }catch(error){
     dispatch(SignOutUserFailure(error))
-  }
-  }
+  }}
 
+
+  const handleUserListing = async () => {
+    setListingError(false);
+    try {
+      const GetListing = await fetch(
+        `/api/list/listing/${currentUser._id}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await GetListing.json();
+      if(data.success === false){
+        setListingError(data.message)
+        return
+      }
+       setShowListing(data)
+      console.log(data)
+      console.log(showListing)
+    } catch (error) {
+      setListingError(true);
+      console.log(error)
+    }
+  }
   
   return (
     <div className="max-w-xl mx-auto">
@@ -135,6 +158,31 @@ console.log(currentUser)
       <p className="text-green-700 my-5 ">
         {!error && update ? "changes updated" : ""}
       </p>
+      <p onClick={handleUserListing} className='text-green-700 text-center font-medium cursor-pointer hover:opacity-80'>Show Listings</p>
+      
+      {showListing && showListing.length > 0 &&
+     <div>
+      <h1 className='text-2xl font-semibold text-center my-7'>Listing</h1>
+      {showListing.map((list,id)=>{
+          return <div key={id} className="flex justify-between items-center my-5">
+               <Link to={`/api/list/listing/${list._id}`}>
+                 <img src={list.imageUrls} className="h-20 w-15" />
+               </Link>
+               <Link to={`/api/list/listing/${list._id}`}>
+                 <p className="truncate font-semibold">{list.username}</p>
+               </Link>
+               <div className="flex flex-col items-center">
+                 <button className="text-red-600 cursor-pointer uppercase hover:underline">
+                   delete
+                 </button>
+                 <button className="text-green-600 cursor-pointer uppercase hover:underline">
+                   edit
+                 </button>
+               </div>
+             </div>
+      })}
+       </div>
+      } 
     </div>
   );
 }
