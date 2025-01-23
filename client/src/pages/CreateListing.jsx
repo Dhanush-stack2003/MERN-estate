@@ -102,6 +102,7 @@ export default function CreateListing() {
       setLoading(false);
       const data = await list.json()      
       if(data.success === false) return setError("unable to process,please provide the valid information")
+       console.log(data)
        navigate(`/listings/${data._id}`)
     } catch (error) {
       setLoading(false);

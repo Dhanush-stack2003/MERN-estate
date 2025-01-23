@@ -94,10 +94,23 @@ export default function Profile() {
         return
       }
        setShowListing(data)
-      console.log(data)
-      console.log(showListing)
     } catch (error) {
       setListingError(true);
+      console.log(error)
+    }
+  }
+
+  const handlerDeleteList =async (id) => {
+    console.log(id)
+    try{
+    const list = await fetch(`/api/list/delete/${id}`,{
+      method:'DELETE'
+    })
+    const data = await list.json();
+    if(data.success === false){
+      console.log(data.message)
+      return
+    }}catch(error){
       console.log(error)
     }
   }
@@ -172,7 +185,7 @@ export default function Profile() {
                  <p className="truncate font-semibold">{list.username}</p>
                </Link>
                <div className="flex flex-col items-center">
-                 <button className="text-red-600 cursor-pointer uppercase hover:underline">
+                 <button onClick={()=>handlerDeleteList(list._id)} className="text-red-600 cursor-pointer uppercase hover:underline">
                    delete
                  </button>
                  <button className="text-green-600 cursor-pointer uppercase hover:underline">
@@ -183,6 +196,7 @@ export default function Profile() {
       })}
        </div>
       } 
+      <p className='text-red-600'>{listingError && listingError}</p>
     </div>
   );
 }
