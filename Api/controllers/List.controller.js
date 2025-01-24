@@ -28,12 +28,42 @@ export const deleteListing = async(req,res,next) => {
 
     if(!listing) return next(ErrorHandler(404, "listing not found"));
 
-    if(req.user.id !== listing.id) return next(ErrorHandler(401,"you can delete your listing only"))
+    if(req.user.id !== listing.userRef) return next(ErrorHandler(401,"you can delete your listing only"))
 
     try {
         await Listing.findByIdAndDelete(req.params.id)
         res.status(200).json("listing deleted successfully")
     } catch (error) {
+        next(error)
+    }
+}
+
+export const updateListing = async (req,res,next) =>{
+    const listing = await Listing.findById(req.params.id);
+
+    if(!listing) return next(ErrorHandler(404,"listing no found"))
+
+    if(req.user.id !== listing.userRef) return next(ErrorHandler(401,"you can delete your listing only"))
+
+    try {
+       const updatedList = await Listing.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {new:true}
+       ) 
+       res.status(200).json(updatedList)
+    } catch (error) {
+     next(error)
+    }
+}
+
+export const GetListing = async(req,res,next) => {
+    const listing = await Listing.findById(req.params.id)
+    try{
+    if(!listing) return next(ErrorHandler(404,"listing not found"))
+    const list = await Listing.findById(req.params.id);
+    res.status(200).json(list)
+    }catch(error){
         next(error)
     }
 }

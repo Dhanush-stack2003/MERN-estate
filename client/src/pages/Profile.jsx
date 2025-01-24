@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector,useDispatch } from 'react-redux'
-import {  Link, useNavigate } from 'react-router-dom';
+import {  Link, useNavigate, useParams } from 'react-router-dom';
 import { 
   updateUserStart,updateUserFailure,
   updateUserSuccess,deleteUserStart,deleteUserFailure
@@ -12,6 +12,7 @@ export default function Profile() {
 
   const { currentUser} = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const params = useParams();
   const [formData,setFormData] = useState({});
   const [loading,setLoading] = useState(false);
   const [update,setUpdated] = useState(false);
@@ -68,7 +69,9 @@ export default function Profile() {
   const signOutHandler =async () => {
     try{
     dispatch(SignOutUserStart())
-    const user = await fetch('/api/auth/signout');
+    const user = await fetch('/api/auth/signout',{
+        credentials:'include'
+    });
     const data = await user.json()
     if(data.success === false){
       SignOutUserFailure(data.message)
@@ -103,7 +106,7 @@ export default function Profile() {
   const handlerDeleteList =async (id) => {
     console.log(id)
     try{
-    const list = await fetch(`/api/list/delete/${id}`,{
+    const list = await fetch(`/api/list/listing/delete/${id}`,{
       method:'DELETE'
     })
     const data = await list.json();
@@ -113,6 +116,21 @@ export default function Profile() {
     }}catch(error){
       console.log(error)
     }
+  }
+
+  const handleUpdateList =async(updateId) => {
+    const list = await fetch('/api/list/listing/update',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify()
+    })
+    const data = await list.json();
+    if(data.success === false){
+      console.log(data.message)
+    }
+    console.log(data)
   }
   
   return (
@@ -188,9 +206,11 @@ export default function Profile() {
                  <button onClick={()=>handlerDeleteList(list._id)} className="text-red-600 cursor-pointer uppercase hover:underline">
                    delete
                  </button>
+                 <Link to={`/update-list/${list._id}`}>
                  <button className="text-green-600 cursor-pointer uppercase hover:underline">
                    edit
                  </button>
+                  </Link>
                </div>
              </div>
       })}
