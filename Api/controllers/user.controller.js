@@ -44,3 +44,14 @@ export const deleteUser =async (req,res,next) => {
          next(error)
       }
 }
+
+export const getuser = async (req,res,next) => {
+   try {
+      if(req.user.id !== req.params.id) return(next(ErrorHandler(404,"user not found")))
+      const user = await User.findById(req.params.id);
+      const {password:pass,...rest} = user._doc;
+      res.status(200).json(rest)
+   } catch (error) {
+      next(error)
+   }
+}

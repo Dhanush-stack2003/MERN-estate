@@ -5,13 +5,17 @@ import {Navigation} from 'swiper/modules'
 import SwiperCore from 'swiper'
 import 'swiper/swiper-bundle.css'
 import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux';
+import Contact from './Contact';
 
 export default function Listing() {
     SwiperCore.use([Navigation])
     const [error,setError] = useState(false);
     const [listing,setListing] = useState([]);
     const [loading,setLoading] = useState(false);
-    const [copied,setCopied] = useState(false)
+    const [copied,setCopied] = useState(false);
+    const [contact,setContact] = useState(false);
+    const { currentUser }  = useSelector((state)=>state.user)
     const params = useParams();
 
     useEffect(()=>{
@@ -30,18 +34,17 @@ export default function Listing() {
      fetchListing()
 },[params.ListingId])
 
-    console.log(listing)
   return (
     <main>
       {loading && (
         <p className="text-slate-700 text-center text-2xl">Loading...</p>
       )}
       {error && <p className="text-red-600 text-center text-2xl">{error}</p>}
-      {listing && !loading && !error &&(
-       <div>
-      {/* <Swiper navigation>
-            {listing.imageUrls.length > 0 && listing.imageUrls.map((url) =>(
-                  <SwiperSlide key={url}> 
+      {listing && !loading && !error && (
+        <div className="gap-4">
+          {/* <Swiper navigation>
+            {listing.imageUrls.length > 0 && listing.imageUrls.map((url) => (
+                 <SwiperSlide key={url}> 
                     <img
                       src={url}
                       alt="estate"
@@ -54,19 +57,23 @@ export default function Listing() {
                   </SwiperSlide>
               ))}
       </Swiper> */}
-       <div>
-        <FaShare
-        className='text-slate-500'
-        onClick={()=>{
-          navigator.clipboard.writeText(window.location.href);
-          setCopied(true);
-          setTimeout(()=>{
-            setCopied(false);
-          },2000)
-        }}
-        />
-       </div>
-       {copied && <p className='fixed top-[23%] right-[5%] z-10 rounded-md bg-slate-100 p-2'>Link Copied!</p>}
+          <div>
+            <FaShare
+              className="text-slate-500"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                setCopied(true);
+                setTimeout(() => {
+                  setCopied(false);
+                }, 2000);
+              }}
+            />
+          </div>
+          {copied && (
+            <p className="fixed top-[23%] right-[5%] z-10 rounded-md bg-slate-100 p-2">
+              Link Copied!
+            </p>
+          )}
           <div className="flex flex-col max-w-4xl mx-auto gap-6 my-6">
             <p className="font-semibold text-2xl text-slate-600 my-3">
               {listing.username} - $ {listing.regularPrice} / month
@@ -90,28 +97,37 @@ export default function Listing() {
             </p>
             <ul className="flex gap-5 flex-wrap text-green-900 font-semibold text-sm">
               <li className="flex items-center gap-1 whitespace-nowrap">
-                <FaBath color='green'/>
+                <FaBath color="green" />
                 {listing.bathrooms > 1
                   ? `${listing.bathrooms} baths`
                   : `${listing.bathrooms} bath`}
               </li>
               <li className="flex items-center gap-1 whitespace-nowrap">
-                <FaBed color='green'/>
+                <FaBed color="green" />
                 {listing.bedrooms > 1
                   ? `${listing.bedrooms} beds`
                   : `${listing.bedrooms} bed`}
               </li>
               <li className="flex items-center gap-1 whitespace-nowrap">
-                <FaParking color='green'/>
-                {listing.parking ? "Parking" : "No Parking"}
+                <FaParking color="green" />
+                {listing.parking ? "No Parking" : "Parking"}
               </li>
               <li className="flex items-center gap-1 whitespace-nowrap">
-                <FaTable color='green'/>
+                <FaTable color="green" />
                 {listing.furnished ? "Furnished" : "Not Furnished"}
               </li>
             </ul>
+            {currentUser._id !== listing.userRef && !contact && (
+              <button
+                className="bg-slate-700 text-white  p-3 rounded-lg uppercase hover:opacity-90 w-full"
+                onClick={() => setContact(true)}
+              >
+                Contact Landlord
+              </button>
+            )}
+            {contact && <Contact listing={listing} />}
+          </div>
         </div>
-       </div>
       )}
     </main>
   );

@@ -194,7 +194,7 @@ export default function Profile() {
           return (
            <div key={id} className="flex justify-between items-center my-5">
                <Link to={`/listing/${list._id}`}>
-                 <img src={list.imageUrls} className="h-20 w-15" />
+                 <img src={list.imageUrls} className="h-20 w-40" />
                </Link>
                <Link to={`/listing/${list._id}`}>
                  <p className="truncate font-semibold">{list.username}</p>
