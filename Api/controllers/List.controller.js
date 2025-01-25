@@ -11,14 +11,15 @@ export const CreateListing =async (req,res,next) => {
     }
 }
 
-export const ShowListing = async (req,res,next) => {
+export const ShowListing = async (req,res) => {
     try {
-        if(req.user.id === req.params.id){
-            const list = await Listing.find({userRef:req.params.id})
-            res.status(200).json(list)
-        }
+    // const user = await Listing.findById(req.params.id)
+    // if(!user) return res.status(404).json('Listing not found')
+    // if(req.user.id !== req.params.id) return res.status(401).json("unAuthorized")
+    const list = await Listing.find({userRef:req.params.id})
+    res.status(200).json(list)     
     } catch (error) {
-        console.log(error)
+        console.log(error.message)
         next(error)
     }
 }

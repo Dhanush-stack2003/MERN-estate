@@ -64,7 +64,9 @@ export const google = async(req,res,next) => {
   next(error)
 }}
 
-export const signOut = (req,res,next) =>{ 
+export const signOut = async(req,res,next) =>{ 
+  const user = await User.findById(req.body.id);
+  if(!user) return res.status(404).json("user not found")
   try {
     res.clearCookie('ACCESS_TOKEN',{httpOnly:true})
     res.status(200).json("signed out")

@@ -85,15 +85,11 @@ export default function Profile() {
   const handleUserListing = async () => {
     setListingError(false);
     try {
-      const GetListing = await fetch(
-        `/api/list/listing/${currentUser._id}`,
-        {
-          method: "GET",
-        }
-      );
+      const GetListing = await fetch(`/api/list/listing/${currentUser._id}`);
       const data = await GetListing.json();
       if(data.success === false){
         setListingError(data.message)
+        console.log(data.message)
         return
       }
        setShowListing(data)
@@ -119,7 +115,7 @@ export default function Profile() {
   }
 
   const handleUpdateList =async(updateId) => {
-    const list = await fetch('/api/list/listing/update',{
+    const list = await fetch(`/api/list/listing/update/${updateId}`,{
       method:'POST',
       headers:{
         'Content-Type':'application/json'
@@ -195,11 +191,12 @@ export default function Profile() {
      <div>
       <h1 className='text-2xl font-semibold text-center my-7'>Listing</h1>
       {showListing.map((list,id)=>{
-          return <div key={id} className="flex justify-between items-center my-5">
-               <Link to={`/api/list/listing/${list._id}`}>
+          return (
+           <div key={id} className="flex justify-between items-center my-5">
+               <Link to={`/listing/${list._id}`}>
                  <img src={list.imageUrls} className="h-20 w-15" />
                </Link>
-               <Link to={`/api/list/listing/${list._id}`}>
+               <Link to={`/listing/${list._id}`}>
                  <p className="truncate font-semibold">{list.username}</p>
                </Link>
                <div className="flex flex-col items-center">
@@ -207,12 +204,12 @@ export default function Profile() {
                    delete
                  </button>
                  <Link to={`/update-list/${list._id}`}>
-                 <button className="text-green-600 cursor-pointer uppercase hover:underline">
+                 <button className="text-green-600 cursor-pointer uppercase hover:underline" onClick={()=>handleUpdateList(list._id)}>
                    edit
                  </button>
                   </Link>
                </div>
-             </div>
+             </div>)
       })}
        </div>
       } 

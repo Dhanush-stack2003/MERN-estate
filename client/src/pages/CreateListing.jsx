@@ -288,7 +288,7 @@ export default function CreateListing() {
                   return (
                     <div className='flex justify-between' key={id}>
                     <img
-                      src={url}
+                      src={url[0]}
                       alt="profile"
                       key={id}
                       className="object-cover rounded-lg h-15 w-40 my-2 uppercase hover:opacity-90"

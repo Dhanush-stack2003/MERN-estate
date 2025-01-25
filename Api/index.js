@@ -35,6 +35,6 @@ app.use((err,req,res,next)=>{
     return res.send({
         success:false,
         statusCode,
-        message
+        message,
     })
 })
