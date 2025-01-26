@@ -42,7 +42,7 @@ const ListSchema =new mongoose.Schema({
         require:true
     },
     offer:{
-        type:String,
+        type:Boolean,
         require:true
     },
     imageUrls:{
