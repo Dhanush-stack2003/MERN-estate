@@ -11,6 +11,7 @@ import PrivateProfile from './components/auth/privateProfile'
 import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
 import Listing from './pages/Listing'
+import Search from './pages/Search'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
        <Route path='/update-list/:ListingId' element={<UpdateListing/>}/>
        <Route path='/profile' element={<Profile/>}/>
       </Route>
+      <Route path='/search' element={<Search/>}/>
       <Route path='/contact' element={<Contact/>}/>
       <Route path='/about' element={<About/>}/>
       <Route path='/listing/:ListingId' element={<Listing/>}/>
