@@ -93,7 +93,8 @@ export const GetSearchListing = async (req,res,next) => {
           username:{$regex:searchTerm.toString(),$options:'i'},
           parkingSpot,
           furnished,
-          type
+          offer,
+          type,
         })
           .sort({ [sort]: order })
           .limit(limit)

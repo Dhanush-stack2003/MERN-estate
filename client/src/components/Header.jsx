@@ -6,22 +6,22 @@ import { useSelector } from 'react-redux'
 export default function Header() {
     const { currentUser } = useSelector((state)=>state.user);
     const Navigate = useNavigate()
-    const [searchParams,setSearchParams] = useState();
+    const [searchParams,setSearchParams] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('search',searchParams)
+        urlParams.set('searchTerm',searchParams)
         const searchURL = urlParams.toString();
         Navigate(`/search?${searchURL}`)
     }
 
     useEffect(()=>{
         const Urlparams = new URLSearchParams(location.search);
-        Urlparams.get('search')
-        const paramGetFromUrl = Urlparams;
-        if(paramGetFromUrl){
-            setSearchParams(paramGetFromUrl)
+        Urlparams.get('searchTerm')
+        const paramGetFromUrl = Urlparams.toString();
+        if (paramGetFromUrl) {
+          setSearchParams(paramGetFromUrl);
         }
     },[location.search])
   return (
@@ -37,6 +37,7 @@ export default function Header() {
             placeholder="search..."
             className="focus:outline-none  w-24 sm:w-64 bg-transparent"
             onChange={(e)=>setSearchParams(e.target.value)}
+            value={searchParams}
           />
           <button onClick={handleSubmit}>
             <FaSearch />
