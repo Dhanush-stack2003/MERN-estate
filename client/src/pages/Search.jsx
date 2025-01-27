@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import {useNavigate} from 'react-router-dom'
+import Listing from '../components/Listing';
 
 export default function Search() {
   const Navigate = useNavigate();
@@ -117,7 +118,7 @@ console.log(listings)
                 id="all"
                 className="h-5 w-4"
                 onChange={handleSubmit}
-                checked={sideBarListing.type === 'all'}
+                checked={sideBarListing.type === "all"}
               />
               <span>Rent & Sell</span>
             </div>
@@ -126,7 +127,7 @@ console.log(listings)
                 type="checkbox"
                 id="rent"
                 className="w-4 h-5"
-                checked={sideBarListing.type === 'rent'}
+                checked={sideBarListing.type === "rent"}
                 onChange={handleSubmit}
               />
               <span>Rent</span>
@@ -136,7 +137,7 @@ console.log(listings)
                 type="checkbox"
                 id="sell"
                 className="w-4 h-5"
-                checked={sideBarListing.type === 'sell'}
+                checked={sideBarListing.type === "sell"}
                 onChange={handleSubmit}
               />
               <span>Sell</span>
@@ -196,7 +197,15 @@ console.log(listings)
       </div>
       <div className="p-7">
         <h1 className="text-3xl font-semibold">Listing Details</h1>
-         {loading && 'Loading...'}
+        <div className="">
+          <div className='flex gap-4'>
+            {listings.length === 0 && !loading && <p className='text-xl font-semibold'>No Listing Found</p>}
+            {loading && <p className='text-xl font-semibold'>Loading...</p>}
+          </div>
+          <div>
+            {listings && listings.map((listingItems)=> <Listing key={listingItems._id} listing={listingItems} />)}
+          </div>
+        </div>
       </div>
     </div>
   );
