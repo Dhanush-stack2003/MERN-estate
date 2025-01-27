@@ -5,7 +5,8 @@ import Listing from '../components/Listing';
 export default function Search() {
   const Navigate = useNavigate();
   const [listings,setListings] = useState([]);
-  const [loading,setLoading] = useState(false)
+  const [loading,setLoading] = useState(false);
+  const [showMore,setShowMore] = useState(false);
   const [ sideBarListing,setSideBarListing ] = useState({
     searchTerm:'',
     type:'all',
@@ -15,8 +16,6 @@ export default function Search() {
     sort:'createdAt',
     order:'desc'
 });
-
-console.log(listings)
 
  useEffect(()=>{
 
@@ -43,9 +42,16 @@ console.log(listings)
     }
     const fetchListing = async () =>{
         setLoading(true)
+        setShowMore(false);
         const paramUrl = urlParams.toString()
         const list = await fetch(`/api/list/get?${paramUrl}`)
         const data = await list.json();
+        if(data.length > 8){
+          setShowMore(true)
+        }
+        else{
+          setShowMore(false)
+        }
         setListings(data)
         setLoading(false)
     }
@@ -75,7 +81,6 @@ console.log(listings)
       const order = e.target.value.split('_')[1] || 'desc';
 
       setSideBarListing({...sideBarListing,sort,order})
-      console.log(sort,order)
     }
   }
 
@@ -92,7 +97,20 @@ console.log(listings)
         Navigate(`/search?${urlParams}`)
   }
 
-  console.log(sideBarListing)
+  const handleShowMore = async () => {
+    const urlParams = new URLSearchParams(location.search);
+    const startIndex = listings.length;
+    urlParams.set('startIndex',startIndex)
+    const showMore = urlParams.toString()
+    const listMore = await fetch(`/api/list/get?${showMore}`)
+    const data = await listMore.json();
+    console.log(data)
+    if(listings.length <= 9){
+      setShowMore(false)
+    }
+     setListings([...listings,...data])
+  }
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="p-7 border-b-2 md:border-r-2 md:max-h-screen">
@@ -202,8 +220,11 @@ console.log(listings)
             {listings.length === 0 && !loading && <p className='text-xl font-semibold'>No Listing Found</p>}
             {loading && <p className='text-xl font-semibold'>Loading...</p>}
           </div>
-          <div>
+          <div className='flex flex-wrap'>
             {listings && listings.map((listingItems)=> <Listing key={listingItems._id} listing={listingItems} />)}
+          </div>
+          <div>
+            {showMore && <p className='text-green-700 hover:underline text-center cursor-pointer' onClick={handleShowMore}>Show More</p>}
           </div>
         </div>
       </div>

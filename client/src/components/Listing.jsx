@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Listing({listing}) {
   return (
-      <div className="bg-white m-5 rounded-lg transition-shadow shadow-md hover:sm:shadow-lg overflow-hidden sm:h-[330px]">
+      <div className="bg-white m-5 max-w-[270px] rounded-lg transition-shadow shadow-md hover:sm:shadow-lg overflow-hidden sm:h-[330px]">
           <Link to={`/listing/${listing._id}`}>
         {listing && (
           <img
@@ -19,11 +19,11 @@ export default function Listing({listing}) {
           </p>
           <div className="flex gap-1 items-center">
             <MdLocationOn className="text-green-700 h-4 w-4" />
-            <p className="w-full text-sm text-gray-600 truncate">
+            <p className="text-sm text-gray-600 truncate md:line-clamp-2">
               {listing.address}
             </p>
           </div>
-          <p className="text-gray-600 text-sm truncate line-clamp-2">
+          <p className="text-gray-600 text-sm truncate">
             {listing.description}
           </p>
           <p className="text-slate-500 font-semibold">

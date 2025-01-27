@@ -60,6 +60,7 @@ export default function CreateListing() {
   };
 
   const deleteImageHandler = (index) => {
+    console.log(index)
     setFormData({
       ...formData,
       imageUrl:formData.imageUrls.filter((url,id)=>id !== index)
@@ -103,7 +104,7 @@ export default function CreateListing() {
       const data = await list.json()      
       if(data.success === false) return setError("unable to process,please provide the valid information")
        console.log(data)
-       navigate(`/listings/${data._id}`)
+       navigate(`/listing/${data._id}`)
     } catch (error) {
       setLoading(false);
       setError("please provide the require information");

@@ -74,7 +74,7 @@ export default function Listing() {
               Link Copied!
             </p>
           )}
-          <div className="flex flex-col max-w-4xl mx-auto gap-6 my-6">
+          <div className="flex flex-col max-w-4xl mx-auto gap-5 my-4">
             <p className="font-semibold text-2xl text-slate-600 my-3">
               {listing.username} - $ {listing.regularPrice} / month
             </p>
@@ -87,7 +87,7 @@ export default function Listing() {
               </p>
               {listing.offer && (
                 <p className="text-white bg-green-700 text-center p-2 rounded-md w-full max-w-[200px]">{`$ ${
-                  +listing.regularPrice - +listing.offerPrice
+                  (+listing.regularPrice - +listing.offerPrice).toLocaleString('en-us')
                 } Discount`}</p>
               )}
             </div>

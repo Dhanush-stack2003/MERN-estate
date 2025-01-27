@@ -70,7 +70,7 @@ export const GetSearchListing = async (req,res,next) => {
     try {
         const searchTerm = req.query.searchTerm || '';
         const limit = parseInt(req.query.limit) || 9;
-        const startIndex = parseInt(req.query.startindex) || 0;
+        const startIndex = parseInt(req.query.startIndex) || 0;
         const sort = req.query.sort || 'createdAt';
         const order = req.query.order || 'desc';
         let parkingSpot = req.query.parkingSpot;
