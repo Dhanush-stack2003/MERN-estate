@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux';
 import Contact from './Contact';
 
 export default function Listing() {
-    SwiperCore.use([Navigation])
     const [error,setError] = useState(false);
     const [listing,setListing] = useState([]);
     const [loading,setLoading] = useState(false);
@@ -42,21 +41,23 @@ export default function Listing() {
       {error && <p className="text-red-600 text-center text-2xl">{error}</p>}
       {listing && !loading && !error && (
         <div className="gap-4">
-          {/* <Swiper navigation>
-            {listing.imageUrls.length > 0 && listing.imageUrls.map((url) => (
-                 <SwiperSlide key={url}> 
+          <Swiper navigation>
+            {listing.length > 0 && listing.map((listing) => {
+                 return (
+                 <SwiperSlide key={listing._id}> 
                     <img
-                      src={url}
                       alt="estate"
-                      className="max-[width]:500px"
+                      className="max-[width]:400px"
                       style={{
-                        background: `url${url} w-full center no-repeat`,
-                        backgroundSize: "object-cover",
+                        background: `url(${listing.imageUrls[0]}) w-full center no-repeat`,
+                        backgroundSize: "object-fill",
                       }}
+                      src={listing.imageUrls[0]}
                     />
                   </SwiperSlide>
-              ))}
-      </Swiper> */}
+                 )
+            })}
+      </Swiper>
           <div>
             <FaShare
               className="text-slate-500"
@@ -76,7 +77,7 @@ export default function Listing() {
           )}
           <div className="flex flex-col max-w-4xl mx-auto gap-5 my-4">
             <p className="font-semibold text-2xl text-slate-600 my-3">
-              {listing.username} - $ {listing.regularPrice} / month
+              {listing.username} - {listing.regularPrice} / month
             </p>
             <p className="flex items-center mt-3 gap-6 text-slate-700 text-sm">
               {listing.address}

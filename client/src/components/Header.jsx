@@ -42,7 +42,6 @@ export default function Header() {
             placeholder="search..."
             className="focus:outline-none  w-24 sm:w-64 bg-transparent"
             onChange={(e) => setSearchParams(e.target.value)}
-            value={searchParams}
           />
           <button onClick={handleSubmit}>
             <FaSearch />

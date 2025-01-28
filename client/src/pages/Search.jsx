@@ -202,8 +202,8 @@ export default function Search() {
               defaultValue="createdAt_asc"
               onChange={handleSubmit}
             >
-              <option value="regularPrice_desc">Price low to high</option>
-              <option value="regularPrice_asc"> price high to low</option>
+              <option value="regularPrice_asc">Price low to high</option>
+              <option value="regularPrice_desc"> price high to low</option>
               <option value="createdAt_desc"> Latest</option>
               <option value="createdAt_asc">Oldest</option>
             </select>
