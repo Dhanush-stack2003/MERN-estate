@@ -32,10 +32,10 @@ app.use('/api/auth',authRouter)
 app.use('/api/user',userRouter)
 app.use('/api/list',listRouter)
 
-app.use(express.static(__dirname,'/client/dist'));
+app.use(express.static(path.join(__dirname,'/client/dist')));
 
 app.get('*',(req,res)=>{
-    res.sendFile(__dirname,'client','dist','index.html')
+    res.sendFile(path.join(__dirname,'client','dist','index.html'))
 })
 
 app.use((err,req,res,next)=>{
