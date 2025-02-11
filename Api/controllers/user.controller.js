@@ -36,9 +36,8 @@ try{
 export const deleteUser =async (req,res,next) => {
    if(req.user.id !== req.params.id) return next(ErrorHandler(401,"you can delete your account only"))
       try {
-       const jwtToken = jwt.verify(process.env.JSON_TOKEN)
         await User.findByIdAndDelete(req.params.id)
-        res.clearCookie('ACCESS_TOKEN',jwtToken,{httpOnly:true})
+        res.clearCookie('ACCESS_TOKEN')
         res.status(200).json("user deleted")
       } catch (error) {
          next(error)
@@ -47,7 +46,7 @@ export const deleteUser =async (req,res,next) => {
 
 export const getuser = async (req,res,next) => {
    try {
-      if(req.user.id !== req.params.id) return(next(ErrorHandler(404,"user not found")))
+      if(req.user.id === req.params.id) return(next(ErrorHandler(404,"user not found")))
       const user = await User.findById(req.params.id);
       const {password:pass,...rest} = user._doc;
       res.status(200).json(rest)

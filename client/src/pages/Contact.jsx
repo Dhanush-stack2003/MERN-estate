@@ -11,7 +11,6 @@ export default function Contact({listing}) {
         const list = await fetch(`/api/user/${listing.userRef}`)
         const data = await list.json();
         setLandLord(data)
-        console.log(data)
       }catch (error) {
         console.log(error)
       }}
@@ -21,8 +20,6 @@ export default function Contact({listing}) {
   const handleMessage = (e) => {
     setMessage(e.target.value)
   }
-
-  console.log(landLord)
 
   return (
     <>

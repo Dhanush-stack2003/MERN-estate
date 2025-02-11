@@ -30,6 +30,7 @@ export default function UpdateListing() {
 
   const uploadHandler = async (e) => {
     try {
+      setImageUploadError(null);
      if(file.length > 0 && file.length < 7){
       setLoading(true);
       setError(null)
@@ -60,9 +61,10 @@ export default function UpdateListing() {
   };
 
   const deleteImageHandler = (index) => {
+    console.log(index)
     setFormData({
       ...formData,
-      imageUrl:formData.imageUrls.filter((url,id)=>id !== index)
+      imageUrls:formData.imageUrls.filter((url,id)=>id !== index)
     })
   }
 

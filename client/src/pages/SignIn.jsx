@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
+import {
+  signinFailure,
+  signinStart,
+  signinSuccess,
+} from "../redux/user/userSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 import Oauth from "../components/auth/oAuth";
 
 export default function SignIn() {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const {loading,error} = useSelector((state)=>state.user)
   const navigate = useNavigate()
-  const [error, setError] = useState(null);
   const [signIn, setSignIn] = useState({
     email: "",
     password: "",
@@ -18,7 +24,7 @@ export default function SignIn() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(signinStart())
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -28,17 +34,16 @@ export default function SignIn() {
       });
       const data = await res.json();
       if (data.success === false) {
-        setLoading(false);
+        dispatch(signinFailure(data.message))
         setError(data.message);
         return;
       }
       console.log(data);
-      setLoading(false);
+      dispatch(signinSuccess(data))
       navigate('/')
     } catch (error) {
-      alert(error.message);
       setError(error.message);
-      setLoading(false);
+      dispatch(signinFailure(error.message))
     }
   };
 
@@ -58,6 +63,7 @@ export default function SignIn() {
           name="password"
           placeholder="password"
           id="password"
+          type="password"
           value={signIn.password}
           className="border p-3 rounded-lg"
           onChange={formHandler}

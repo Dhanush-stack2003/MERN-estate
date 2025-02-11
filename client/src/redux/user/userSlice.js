@@ -44,7 +44,7 @@ const userSlice = createSlice({
             state.loading=false
         },
         deleteUserSuccess:(state,action)=>{
-            state.currentUser=action.payload
+            state.currentUser=null
             state.loading=false
             state.error=null
         },
@@ -57,7 +57,7 @@ const userSlice = createSlice({
             state.loading=false
         },
         SignOutUserSuccess:(state,action)=>{
-            state.currentUser=action.payload
+            state.currentUser=null
             state.loading=false
             state.error=null
         },

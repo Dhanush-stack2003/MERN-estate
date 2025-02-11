@@ -1,24 +1,25 @@
 import React, { useState } from 'react'
 import { useSelector,useDispatch } from 'react-redux'
-import {  Link, useNavigate, useParams } from 'react-router-dom';
+import {  Link } from 'react-router-dom';
 import { 
   updateUserStart,updateUserFailure,
   updateUserSuccess,deleteUserStart,deleteUserFailure
   ,deleteUserSuccess, 
   SignOutUserSuccess,
-  SignOutUserStart} from '../redux/user/userSlice';
+  SignOutUserStart,
+  SignOutUserFailure} from '../redux/user/userSlice';
 
 export default function Profile() {
 
   const { currentUser} = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const params = useParams();
   const [formData,setFormData] = useState({});
   const [loading,setLoading] = useState(false);
   const [update,setUpdated] = useState(false);
   const [error,setError] = useState(false);
   const [showListing,setShowListing] = useState([]);
   const [listingError,setListingError] = useState(false);
+  const [ListingNotFound,setListingNotFound] = useState(false)
 
   const formDataSubmit = async (e) => {
     e.preventDefault();
@@ -69,14 +70,16 @@ export default function Profile() {
   const signOutHandler =async () => {
     try{
     dispatch(SignOutUserStart())
-    const user = await fetch('/api/auth/signout',{
-        credentials:'include'
+    const user = await fetch(`/api/auth/signout`,{
+       method:'GET',
+       credentials:'include'
     });
     const data = await user.json()
     if(data.success === false){
-      SignOutUserFailure(data.message)
+      dispatch(SignOutUserFailure(data.message))
+      return
     }
-    SignOutUserSuccess(data)
+    dispatch(SignOutUserSuccess(data))
   }catch(error){
     dispatch(SignOutUserFailure(error))
   }}
@@ -88,19 +91,19 @@ export default function Profile() {
       const GetListing = await fetch(`/api/list/listing/${currentUser._id}`);
       const data = await GetListing.json();
       if(data.success === false){
-        setListingError(data.message)
-        console.log(data.message)
+        setListingError(data.success)
         return
       }
-       setShowListing(data)
+      if(data.length === 0){
+        setListingNotFound(true);
+      }
+      setShowListing(data)
     } catch (error) {
       setListingError(true);
-      console.log(error)
     }
   }
 
   const handlerDeleteList =async (id) => {
-    console.log(id)
     try{
     const list = await fetch(`/api/list/listing/delete/${id}`,{
       method:'DELETE'
@@ -126,7 +129,6 @@ export default function Profile() {
     if(data.success === false){
       console.log(data.message)
     }
-    console.log(data)
   }
   
   return (
@@ -185,35 +187,48 @@ export default function Profile() {
       <p className="text-green-700 my-5 ">
         {!error && update ? "changes updated" : ""}
       </p>
-      <p onClick={handleUserListing} className='text-green-700 text-center font-medium cursor-pointer hover:opacity-80'>Show Listings</p>
-      
-      {showListing && showListing.length > 0 &&
-     <div>
-      <h1 className='text-2xl font-semibold text-center my-7'>Listing</h1>
-      {showListing.map((list,id)=>{
-          return (
-           <div key={id} className="flex justify-between items-center my-5">
-               <Link to={`/listing/${list._id}`}>
-                 <img src={list.imageUrls} className="h-20 w-40" />
-               </Link>
-               <Link to={`/listing/${list._id}`}>
-                 <p className="truncate font-semibold">{list.username}</p>
-               </Link>
-               <div className="flex flex-col items-center">
-                 <button onClick={()=>handlerDeleteList(list._id)} className="text-red-600 cursor-pointer uppercase hover:underline">
-                   delete
-                 </button>
-                 <Link to={`/update-list/${list._id}`}>
-                 <button className="text-green-600 cursor-pointer uppercase hover:underline" onClick={()=>handleUpdateList(list._id)}>
-                   edit
-                 </button>
+      <p
+        onClick={handleUserListing}
+        className="text-green-700 text-center font-medium cursor-pointer hover:opacity-80"
+      >
+        Show Listings
+      </p>
+
+      {showListing && showListing.length > 0 && (
+        <div>
+          <h1 className="text-2xl font-semibold text-center my-7">Listing</h1>
+          {showListing.map((list, id) => {
+            return (
+              <div key={id} className="flex justify-between items-center my-5">
+                <Link to={`/listing/${list._id}`}>
+                  <img src={list.imageUrls} className="h-20 w-40" />
+                </Link>
+                <Link to={`/listing/${list._id}`}>
+                  <p className="truncate font-semibold">{list.username}</p>
+                </Link>
+                <div className="flex flex-col items-center">
+                  <button
+                    onClick={() => handlerDeleteList(list._id)}
+                    className="text-red-600 cursor-pointer uppercase hover:underline"
+                  >
+                    delete
+                  </button>
+                  <Link to={`/update-list/${list._id}`}>
+                    <button
+                      className="text-green-600 cursor-pointer uppercase hover:underline"
+                      onClick={() => handleUpdateList(list._id)}
+                    >
+                      edit
+                    </button>
                   </Link>
-               </div>
-             </div>)
-      })}
-       </div>
-      } 
-      <p className='text-red-600'>{listingError && listingError}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <p className="text-red-600">{listingError && listingError}</p>
+      {!listingError && ListingNotFound ? <span className='text-slate-800 font-bold'>No listing found</span> : ""}
     </div>
   );
 }

@@ -29,6 +29,7 @@ export const signin = async (req, res, next) => {
     res.cookie("ACCESS_TOKEN", jwtToken, { httpOnly: true });
     res.status(200);
     res.json(rest);
+    console.log(rest)
   } catch (err) {
     next(err.message);
   }
@@ -65,10 +66,8 @@ export const google = async(req,res,next) => {
 }}
 
 export const signOut = async(req,res,next) =>{ 
-  const user = await User.findById(req.body.id);
-  if(!user) return res.status(404).json("user not found")
   try {
-    res.clearCookie('ACCESS_TOKEN',{httpOnly:true})
+    res.clearCookie('ACCESS_TOKEN')
     res.status(200).json("signed out")
   } catch (error) {
     next(error)

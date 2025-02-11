@@ -1,6 +1,5 @@
-import React,{useState} from 'react'
+import {useState} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
-import { signinFailure,signinStart,signinSuccess} from '../redux/user/userSlice.js'
 import { useDispatch, useSelector } from 'react-redux';
 import Oauth  from '../components/auth/oAuth';
 
@@ -32,15 +31,12 @@ export default function SignUp() {
     })
     const data =await res.json();
     if(data.success === false){
-    dispatch(signinFailure(data.message))
     return;
     }
     console.log(data)
-    dispatch(signinSuccess(data))
     Navigate('/sign-in')
     }catch(error){
       alert(error.message)
-      dispatch(signinFailure(error))
     }
   }
 
@@ -50,7 +46,7 @@ export default function SignUp() {
       <form className='flex flex-col gap-5'>
         <input name='username' placeholder='username' id='username' value={signup.username} className='border p-3 rounded-lg' onChange={formHandler} />
         <input name='email' placeholder='email' id='password' value={signup.email} className='border p-3 rounded-lg' onChange={formHandler}/>
-        <input name='password' placeholder='password' id='password' value={signup.password} className='border p-3 rounded-lg' onChange={formHandler}/>
+        <input name='password' placeholder='password' type='password' id='password' value={signup.password} className='border p-3 rounded-lg' onChange={formHandler}/>
         <button disabled={loading}
         className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:-55' type='submit' onClick={submitHandler}>{loading ? 'Loading...' : 'Sign Up'}</button>
         <Oauth/>

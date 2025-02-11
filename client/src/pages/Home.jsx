@@ -1,9 +1,9 @@
 import { useState,useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import {Swiper,SwiperSlide} from 'swiper/react'
+import { Navigation,Pagination } from 'swiper/modules'
 import 'swiper/css/bundle'
-import SwiperCore from 'swiper'
-import {Navigation} from 'swiper/modules'
+import "swiper/css/pagination";
 import Listing from '../components/Listing'
 
 export default function Home() {
@@ -15,7 +15,7 @@ export default function Home() {
   useEffect(()=>{
     const fetchListing = async () => {
       try{
-      const getListing = await fetch('/api/list/get?type=sell&offer=true&limit=4')
+      const getListing = await fetch('/api/list/get?offer=true&limit=4')
       const getListingData = await getListing.json();
       setOfferListing(getListingData)
       fetchRentListing()
@@ -35,7 +35,7 @@ export default function Home() {
     }
     const fetchSellListing = async () => {
       try {
-        const getSellListing = await fetch('/api/list/get?type=sell&limit=4')
+        const getSellListing = await fetch('/api/list/get?type=sell&order=asc&limit=4')
         const sellListingData = await getSellListing.json();
         setSellListing(sellListingData)
       } catch (error) {
@@ -64,10 +64,10 @@ export default function Home() {
       </div>
 
       {/* slider */}
-      <Swiper navigation>
-        {offerListing &&
-          offerListing.length > 0 &&
-          offerListing.map((listing) => {
+      <Swiper modules={[Navigation,Pagination]} navigation pagination={{clickable:true}} slidesPerView={1}>
+        {rentListing &&
+          rentListing.length > 0 &&
+          rentListing.map((listing) => {
             return (
               <SwiperSlide key={listing._id}>
                 <img
@@ -75,7 +75,7 @@ export default function Home() {
                   className="max-[width]:400px"
                   style={{
                     background: `url(${listing.imageUrls[0]}) w-full no-repeat center`,
-                    backgroundSize: "object-fill",
+                    backgroundSize: "object-cover",
                   }}
                   src={listing.imageUrls[0]}
                 />

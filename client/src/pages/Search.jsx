@@ -4,19 +4,19 @@ import Listing from '../components/Listing';
 
 export default function Search() {
   const Navigate = useNavigate();
-  const [listings,setListings] = useState([]);
-  const [loading,setLoading] = useState(false);
-  const [showMore,setShowMore] = useState(false);
   const [ sideBarListing,setSideBarListing ] = useState({
     searchTerm:'',
     type:'all',
     parkingSpot:false,
     furnished:false,
     offer:false,
-    sort:'createdAt',
+    sort:'created_at',
     order:'desc'
-});
-
+  });
+  const [listings,setListings] = useState([]);
+  const [loading,setLoading] = useState(false);
+  const [showMore,setShowMore] = useState(false);
+  
  useEffect(()=>{
 
   const paramsHandler = () =>{
@@ -25,7 +25,7 @@ export default function Search() {
     const offerfromUrl = urlParams.get('offer')
     const typefromUrl = urlParams.get('type')
     const parkingfromUrl = urlParams.get('parkingSpot')
-    const furnishfromUrl = urlParams.get('furnish')
+    const furnishfromUrl = urlParams.get('furnished')
     const sortfromUrl = urlParams.get('sort')
     const orderfromUrl = urlParams.get('order')
 
@@ -36,8 +36,8 @@ export default function Search() {
         parkingSpot: parkingfromUrl || sideBarListing.parkingSpot === 'true' ? true : false,
         furnished: furnishfromUrl || sideBarListing.furnished === 'true' ? true : false,
         offer : furnishfromUrl || sideBarListing.offer === 'true' ? true : false,
-        sort: sortfromUrl || sideBarListing.sort === 'createdAt',
-        order: orderfromUrl || sideBarListing.order === 'desc'
+        sort: sortfromUrl || sideBarListing.sort || 'createdAt',
+        order: orderfromUrl || sideBarListing.order || 'desc'
        })
     }
     const fetchListing = async () =>{
@@ -104,7 +104,7 @@ export default function Search() {
     const showMore = urlParams.toString()
     const listMore = await fetch(`/api/list/get?${showMore}`)
     const data = await listMore.json();
-    console.log(data)
+    sideBarListing.searchTerm = "";
     if(listings.length <= 9){
       setShowMore(false)
     }
@@ -199,7 +199,7 @@ export default function Search() {
             <select
               id="sort_order"
               className="p-3 rounded-lg"
-              defaultValue="createdAt_asc"
+              defaultValue="createdAt_desc"
               onChange={handleSubmit}
             >
               <option value="regularPrice_asc">Price low to high</option>
@@ -215,7 +215,7 @@ export default function Search() {
       </div>
       <div className="p-7">
         <h1 className="text-3xl font-semibold">Listing Details</h1>
-        <div className="">
+        <div className="mx-auto">
           <div className='flex gap-4'>
             {listings.length === 0 && !loading && <p className='text-xl font-semibold'>No Listing Found</p>}
             {loading && <p className='text-xl font-semibold'>Loading...</p>}

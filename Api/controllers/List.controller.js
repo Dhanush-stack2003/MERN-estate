@@ -73,6 +73,10 @@ export const GetSearchListing = async (req,res,next) => {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const sort = req.query.sort || 'createdAt';
         const order = req.query.order || 'desc';
+        let offer = req.query.offer;
+        if (offer === undefined || offer === "false") {
+        offer = { $in: [false, true] };
+        }
         let parkingSpot = req.query.parkingSpot;
         if(parkingSpot === undefined || parkingSpot === 'false'){
             parkingSpot={$in:[false,true]}
@@ -82,12 +86,8 @@ export const GetSearchListing = async (req,res,next) => {
             furnished = {$in:[false,true]}
         }
         let type = req.query.type;
-        if(type === undefined || type === 'all'){
+        if(type === undefined || type === 'all' ||type === 'false'){
             type={$in:['sale','rent']}
-        }
-        let offer = req.query.offer;
-        if(offer === undefined || offer === 'false'){
-            offer={$in:[false,true]}
         }
         const listing = await Listing.find({
           username:{$regex:searchTerm.toString(),$options:'i'},
