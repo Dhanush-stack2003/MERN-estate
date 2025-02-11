@@ -40,6 +40,14 @@ app.get('*',(req,res)=>{
     res.sendFile(path.join(__dirname,'client','dist','index.html'))
 })
 
+app.use((req, res, next) => {
+  if (req.headers["x-forwarded-proto"] !== "https") {
+    return res.redirect("https://" + req.headers.host + req.url);
+  }
+  next();
+});
+
+
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
     const message = err.message || "internal server error";
