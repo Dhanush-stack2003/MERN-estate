@@ -1,11 +1,10 @@
 import {useState} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Oauth  from '../components/auth/oAuth';
 
 export default function SignUp() {
 
-  const dispatch =useDispatch();
   const Navigate = useNavigate();
   const { loading,error } = useSelector((state)=>state.user)
   const [signup,setSignup] = useState({
@@ -21,21 +20,29 @@ export default function SignUp() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try{
-      dispatch(signinStart())
-      const res = await fetch('/api/auth/signup',{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-      },
-      body:JSON.stringify(signup),
-    })
-    const data =await res.json();
+      const res = await fetch(
+        "/api/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(signup),
+        }
+      );
+
+      if(!res.ok){
+        console.log(res)
+      }
+     const data =await res.json();
     if(data.success === false){
+      console.log("data message"+ data.success)
     return;
     }
-    console.log(data)
+    console.log(data.message)
     Navigate('/sign-in')
     }catch(error){
+      console.log("error message" + error.message)
       alert(error.message)
     }
   }
@@ -55,7 +62,7 @@ export default function SignUp() {
       <p>have an account?</p>
       <span className='text-slate-600'><Link to='/sign-in'>Sign in</Link></span>
       </div>
-        {error && <p className='text-red-500 my-5'>{error}</p>}
+        {error && <p className='text-red-500 my-5'>{error.message}</p>}
     </div>
   )
 }
