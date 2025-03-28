@@ -5,12 +5,15 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import mongodb from 'mongoose';
+import cors from 'cors'
 
 const app = express();
 
 const PORT = process.env.PORT || 3000
 
 app.use(express.json());
+
+app.use(cors())
 
 app.use(cookieParser())
 
