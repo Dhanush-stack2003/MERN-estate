@@ -82,7 +82,7 @@ export default function SignIn() {
           <Link to="/sign-up">Sign in</Link>
         </span>
       </div>
-      {error && <p className="text-red-500 my-5">{error.message}</p>}
+      {error && <p className="text-red-500 my-5">{error}</p>}
     </div>
   );
 }
