@@ -52,7 +52,7 @@ export default function SignUp() {
       <h1 className='text-center font-semibold text-3xl my-5'>Sign Up</h1>
       <form className='flex flex-col gap-5'>
         <input name='username' placeholder='username' id='username' value={signup.username} className='border p-3 rounded-lg' onChange={formHandler} />
-        <input name='email' placeholder='email' id='password' value={signup.email} className='border p-3 rounded-lg' onChange={formHandler}/>
+        <input name='email' placeholder='email' id='email' value={signup.email} className='border p-3 rounded-lg' onChange={formHandler}/>
         <input name='password' placeholder='password' type='password' id='password' value={signup.password} className='border p-3 rounded-lg' onChange={formHandler}/>
         <button disabled={loading}
         className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:-55' type='submit' onClick={submitHandler}>{loading ? 'Loading...' : 'Sign Up'}</button>

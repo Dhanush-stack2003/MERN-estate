@@ -35,14 +35,12 @@ export default function SignIn() {
       const data = await res.json();
       if (data.success === false) {
         dispatch(signinFailure(data.message))
-        setError(data.message);
         return;
       }
       console.log(data);
       dispatch(signinSuccess(data))
       navigate('/')
     } catch (error) {
-      setError(error.message);
       dispatch(signinFailure(error.message))
     }
   };
@@ -84,7 +82,7 @@ export default function SignIn() {
           <Link to="/sign-up">Sign in</Link>
         </span>
       </div>
-      {error && <p className="text-red-500 my-5">{error}</p>}
+      {error && <p className="text-red-500 my-5">{error.message}</p>}
     </div>
   );
 }

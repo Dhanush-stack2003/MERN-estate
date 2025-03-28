@@ -7,7 +7,8 @@ export default defineConfig({
     proxy:{
       '/api':{
         target:'https://mern-estate-k37d.onrender.com',
-        secure:false
+        changeOrigin:true,
+        rewrite:(path) => path.replace(/^\/api/, "")
       }
       }
     },

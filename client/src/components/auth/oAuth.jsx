@@ -15,17 +15,20 @@ export default function Oauth() {
     const result = await signInWithPopup(Auth,provider)
     console.log(result)
     dispatch(signinStart())
-    const userAuth = await fetch('/api/auth/google',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({
-        email:result.user.email,
-        image:result.user.photoURL,
-        username:result.user.displayName
-      })
-    })
+    const userAuth = await fetch(
+      "https://mern-estate-k37d.onrender.com/api/auth/google",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: result.user.email,
+          image: result.user.photoURL,
+          username: result.user.displayName,
+        }),
+      }
+    );
     const res = await userAuth.json();
     if(res.success === false){
       dispatch(signinFailure(res.message))
