@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import mongodb from 'mongoose';
-import path from 'path';
 
 const app = express();
 
@@ -18,8 +17,6 @@ app.use(cookieParser())
 dotenv.config();
 
 mongodb.connect(process.env.MONGODB).then(()=>console.log("mongodb connected")).catch((err)=>console.log(err.message))
-
-const __dirname = path.resolve();
 
 app.listen(PORT,(err)=>{
     if(err){
@@ -34,11 +31,6 @@ app.use('/api/auth',authRouter)
 app.use('/api/user',userRouter)
 app.use('/api/list',listRouter)
 
-app.use(express.static(path.join(__dirname,'/client/dist')));
-
-app.get('*',(req,res)=>{
-    res.sendFile(path.join(__dirname,'client','dist','index.html'))
-})
 
 app.use((req, res, next) => {
   if (req.headers["x-forwarded-proto"] !== "https") {
