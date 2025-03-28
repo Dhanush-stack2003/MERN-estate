@@ -6,7 +6,7 @@ export default defineConfig({
   server:{
     proxy:{
       '/api':{
-        target:'https://mern-estate-cmt8.onrender.com',
+        target:'https://mern-estate-k37d.onrender.com',
         secure:false
       }
       }
