@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000
 app.use(express.json());
 
 app.use(cors({
-    origin:'https://mern-estate-k37d.onrender.com',
+    origin:'https://mern-estate-frontend-hwm0.onrender.com',
     credentials:true
 }))
 
