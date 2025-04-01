@@ -1,4 +1,4 @@
-import {useEffect,useState} from 'react'
+import {useContext, useEffect,useState} from 'react'
 import { FaBath, FaBed, FaParking, FaTable } from 'react-icons/fa';
 import {Swiper,SwiperSlide} from 'swiper/react';
 import 'swiper/swiper-bundle.css'
@@ -8,6 +8,7 @@ import "swiper/css/pagination";
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import Contact from './Contact';
+import { userContext } from '../components/userContext';
 
 export default function Listing() {
     const [error,setError] = useState(false);
@@ -17,11 +18,12 @@ export default function Listing() {
     const [propertyImage,setPropertyImage] = useState([]);
     const { currentUser }  = useSelector((state)=>state.user)
     const params = useParams();
+    const { BackEndUrl } = useContext(userContext)
 
     useEffect(()=>{
      const fetchListing = async() => {
         setLoading(true)
-        const list = await fetch(`/api/list/get/${params.ListingId}`)
+        const list = await fetch(`${BackEndUrl}/api/list/get/${params.ListingId}`)
         if(!list) return setError(list.message)
         const data = await list.json();
         if(data.success === false){

@@ -1,45 +1,46 @@
-import { useState,useEffect} from 'react'
+import { useState,useEffect, useContext} from 'react'
 import { Link } from 'react-router-dom'
 import {Swiper,SwiperSlide} from 'swiper/react'
 import { Navigation,Pagination } from 'swiper/modules'
 import 'swiper/css/bundle'
 import "swiper/css/pagination";
 import Listing from '../components/Listing'
+import { userContext } from '../components/userContext'
 
 export default function Home() {
   const [offerListing,setOfferListing] = useState([]);
   const [rentListing,setRentListing] = useState([]);
   const [sellListing,setSellListing] = useState([]);
-
+  const { BackEndUrl } = useContext(userContext)
 
   useEffect(()=>{
     const fetchListing = async () => {
       try{
-      const getListing = await fetch('/api/list/get?offer=true&limit=4')
+      const getListing = await fetch(`${BackEndUrl}/api/list/get?offer=true&limit=4`)
       const getListingData = await getListing.json();
       setOfferListing(getListingData)
       fetchRentListing()
       }catch(error){
-        console.log(error)
+        console.log(error.message)
       }
     }
     const fetchRentListing = async () => {
       try{
-      const getRentListing = await fetch('/api/list/get?type=rent&limit=4')
+      const getRentListing = await fetch(`${BackEndUrl}/api/list/get?type=rent&limit=4`)
       const rentListingData = await getRentListing.json();
       setRentListing(rentListingData)
       fetchSellListing()
       }catch(error){
-        console.log(error)
+        console.log(error.message)
       }
     }
     const fetchSellListing = async () => {
       try {
-        const getSellListing = await fetch('/api/list/get?type=sell&order=asc&limit=4')
+        const getSellListing = await fetch(`${BackEndUrl}/api/list/get?type=sell&order=asc&limit=4`)
         const sellListingData = await getSellListing.json();
         setSellListing(sellListingData)
       } catch (error) {
-        console.log(error)
+        console.log(error.message)
       }
     }
      fetchListing()

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {useSelector} from 'react-redux';
 import { useNavigate } from 'react-router'
+import { userContext } from "../components/userContext";
 
 export default function CreateListing() {
   const {currentUser} = useSelector((state)=>state.user);
@@ -9,6 +10,7 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false);
   const [imageUploadError,setImageUploadError] = useState(null)
   const [error, setError] = useState(null);
+  const { BackEndUrl } = useContext(userContext)
   const [formData, setFormData] = useState({
     imageUrls: [],
     username: "",
@@ -43,7 +45,7 @@ export default function CreateListing() {
           body: formStorage,
         }
       );
-      if (!res) return console.log(res.message);
+      if (!res) return setError(res.message);
       const data = await res.json();
       promises.push(data.url);
       if(promises.length > 0){
@@ -55,12 +57,12 @@ export default function CreateListing() {
       setImageUploadError("user must upload atleast 1 image")
     }} catch (error) {
       setLoading(false);
+      setError(error.message)
       setImageUploadError("image size must be under(2mb)")
     }
   };
 
   const deleteImageHandler = (index) => {
-    console.log(index)
     setFormData({
       ...formData,
       imageUrl:formData.imageUrls.filter((url,id)=>id !== index)
@@ -93,7 +95,7 @@ export default function CreateListing() {
     if(+formData.offerPrice > +formData.regularPrice) return setError("Offer price must be less than Regular price")
     try {
       setLoading(true);
-      const list = await fetch('/api/list/create',{
+      const list = await fetch(`${BackEndUrl}/api/list/create`,{
         method:'POST',
         headers:{
           'Content-Type':'application/json'
@@ -101,9 +103,8 @@ export default function CreateListing() {
         body:JSON.stringify({...formData,userRef:currentUser._id})
       })
       setLoading(false);
-      const data = await list.json()      
+      const data = await list.json();    
       if(data.success === false) return setError("unable to process,please provide the valid information")
-       console.log(data)
        navigate(`/listing/${data._id}`)
     } catch (error) {
       setLoading(false);

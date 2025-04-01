@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useSelector,useDispatch } from 'react-redux'
 import {  Link } from 'react-router-dom';
 import { 
@@ -8,6 +8,7 @@ import {
   SignOutUserSuccess,
   SignOutUserStart,
   SignOutUserFailure} from '../redux/user/userSlice';
+import { userContext } from '../components/userContext';
 
 export default function Profile() {
 
@@ -20,13 +21,15 @@ export default function Profile() {
   const [showListing,setShowListing] = useState([]);
   const [listingError,setListingError] = useState(false);
   const [ListingNotFound,setListingNotFound] = useState(false)
+  const { BackEndUrl } = useContext(userContext)
+
 
   const formDataSubmit = async (e) => {
     e.preventDefault();
     try{
       dispatch(updateUserStart())
       setLoading(true)
-      const updateUser = await fetch(`api/user/update/${currentUser._id}`,{
+      const updateUser = await fetch(`${BackEndUrl}/api/user/update/${currentUser._id}`,{
       method:'POST',
       headers:{
         'Content-Type':'application/json'
@@ -54,7 +57,7 @@ export default function Profile() {
   const deleteHandler =async () => {
     try{
       dispatch(deleteUserStart())
-    const user = await fetch(`/api/user/delete/${currentUser._id}`,{
+    const user = await fetch(`${BackEndUrl}/api/user/delete/${currentUser._id}`,{
       method:'DELETE',
       credentials:'include',
     })
@@ -70,7 +73,7 @@ export default function Profile() {
   const signOutHandler =async () => {
     try{
     dispatch(SignOutUserStart())
-    const user = await fetch(`/api/auth/signout`,{
+    const user = await fetch(`${BackEndUrl}/api/auth/signout`,{
        method:'GET',
        credentials:'include'
     });
@@ -88,7 +91,7 @@ export default function Profile() {
   const handleUserListing = async () => {
     setListingError(false);
     try {
-      const GetListing = await fetch(`/api/list/listing/${currentUser._id}`);
+      const GetListing = await fetch(`${BackEndUrl}/api/list/listing/${currentUser._id}`);
       const data = await GetListing.json();
       if(data.success === false){
         setListingError(data.success)
@@ -105,7 +108,7 @@ export default function Profile() {
 
   const handlerDeleteList =async (id) => {
     try{
-    const list = await fetch(`/api/list/listing/delete/${id}`,{
+    const list = await fetch(`${BackEndUrl}/api/list/listing/delete/${id}`,{
       method:'DELETE'
     })
     const data = await list.json();
@@ -113,12 +116,12 @@ export default function Profile() {
       console.log(data.message)
       return
     }}catch(error){
-      console.log(error)
+      console.log(error.message)
     }
   }
 
   const handleUpdateList =async(updateId) => {
-    const list = await fetch(`/api/list/listing/update/${updateId}`,{
+    const list = await fetch(`${BackEndUrl}/api/list/listing/update/${updateId}`,{
       method:'POST',
       headers:{
         'Content-Type':'application/json'

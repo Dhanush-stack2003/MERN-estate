@@ -1,12 +1,14 @@
-import {useState} from 'react'
+import {useState,useContext} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import Oauth  from '../components/auth/oAuth';
+import { userContext } from '../components/userContext';
 
 export default function SignUp() {
 
   const Navigate = useNavigate();
   const { loading,error } = useSelector((state)=>state.user)
+  const { BackEndUrl } = useContext(userContext)
   const [signup,setSignup] = useState({
     username:"",
     email:"",
@@ -21,7 +23,7 @@ export default function SignUp() {
     e.preventDefault();
     try{
       const res = await fetch(
-        "https://mern-estate-k37d.onrender.com/api/auth/signup",
+        `${BackEndUrl}/api/auth/signup`,
         {
           method: "POST",
           headers: {

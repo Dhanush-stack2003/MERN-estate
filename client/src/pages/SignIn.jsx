@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState,useContext } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import {
   signinFailure,
@@ -7,11 +7,13 @@ import {
 } from "../redux/user/userSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import Oauth from "../components/auth/oAuth";
+import { userContext } from "../components/userContext.jsx";
 
 export default function SignIn() {
   const dispatch = useDispatch();
   const {loading,error} = useSelector((state)=>state.user)
   const navigate = useNavigate()
+  const { BackEndUrl } = useContext(userContext)
   const [signIn, setSignIn] = useState({
     email: "",
     password: "",
@@ -21,11 +23,12 @@ export default function SignIn() {
     setSignIn({ ...signIn, [e.target.name]: e.target.value });
   };
 
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       dispatch(signinStart())
-      const res = await fetch("/api/auth/signin", {
+      const res = await fetch(`${BackEndUrl}/api/auth/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +85,7 @@ export default function SignIn() {
           <Link to="/sign-up">Sign in</Link>
         </span>
       </div>
-      {error && <p className="text-red-500 my-5">{error}</p>}
+      {error && <p className="text-red-500 my-5">{error.message}</p>}
     </div>
   );
 }

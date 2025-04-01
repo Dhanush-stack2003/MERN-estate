@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState,useContext } from 'react'
 import {useNavigate} from 'react-router-dom'
 import Listing from '../components/Listing';
+import { userContext } from '../components/userContext';
 
 export default function Search() {
   const Navigate = useNavigate();
@@ -16,6 +17,8 @@ export default function Search() {
   const [listings,setListings] = useState([]);
   const [loading,setLoading] = useState(false);
   const [showMore,setShowMore] = useState(false);
+  const { BackEndUrl } = useContext(userContext)
+  
   
  useEffect(()=>{
 
@@ -44,7 +47,7 @@ export default function Search() {
         setLoading(true)
         setShowMore(false);
         const paramUrl = urlParams.toString()
-        const list = await fetch(`/api/list/get?${paramUrl}`)
+        const list = await fetch(`${BackEndUrl}/api/list/get?${paramUrl}`)
         const data = await list.json();
         if(data.length > 8){
           setShowMore(true)
@@ -102,7 +105,7 @@ export default function Search() {
     const startIndex = listings.length;
     urlParams.set('startIndex',startIndex)
     const showMore = urlParams.toString()
-    const listMore = await fetch(`/api/list/get?${showMore}`)
+    const listMore = await fetch(`${BackEndUrl}/api/list/get?${showMore}`)
     const data = await listMore.json();
     sideBarListing.searchTerm = "";
     if(listings.length <= 9){

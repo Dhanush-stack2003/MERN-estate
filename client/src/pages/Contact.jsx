@@ -1,18 +1,20 @@
-import {useState,useEffect} from 'react'
+import {useState,useEffect, useContext} from 'react'
 import { Link } from 'react-router-dom';
+import { userContext } from '../components/userContext';
 
 export default function Contact({listing}) {
   const [landLord,setLandLord] = useState(null);
   const [message,setMessage] = useState('');
+  const { BackEndUrl } = useContext(userContext)
 
   useEffect(()=>{
     const getListing = async() => {
     try {
-        const list = await fetch(`/api/user/${listing.userRef}`)
+        const list = await fetch(`${BackEndUrl}/api/user/${listing.userRef}`)
         const data = await list.json();
         setLandLord(data)
       }catch (error) {
-        console.log(error)
+        console.log(error.message)
       }}
   getListing()
 },[listing.userRef])

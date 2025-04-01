@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {useSelector} from 'react-redux';
 import { useNavigate, useParams } from 'react-router'
+import { userContext } from "../components/userContext";
 
 export default function UpdateListing() {
   const {currentUser} = useSelector((state)=>state.user);
@@ -8,6 +9,7 @@ export default function UpdateListing() {
   const params = useParams();
   const [file, setFile] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { BackEndUrl } = useContext(userContext)
   const [imageUploadError,setImageUploadError] = useState(null)
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
@@ -91,7 +93,7 @@ export default function UpdateListing() {
   useEffect(()=>{
     const getListing = async() => {
     const listing = params.ListingId
-    const getUserList =await fetch(`/api/list/get/${listing}`)
+    const getUserList =await fetch(`${BackEndUrl}/api/list/get/${listing}`)
     const data =await getUserList.json();
     if(data.success === false){
       setError(data.message)
@@ -110,7 +112,7 @@ console.log(formData)
     if(+formData.offerPrice > +formData.regularPrice) return setError("Offer price must be less than Regular price")
     try {
       setLoading(true);
-      const list = await fetch(`/api/list/listing/update/${params.ListingId}`,{
+      const list = await fetch(`${BackEndUrl}/api/list/listing/update/${params.ListingId}`,{
         method:'POST',
         headers:{
           'Content-Type':'application/json'

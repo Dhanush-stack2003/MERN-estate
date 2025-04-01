@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {signInWithPopup,getAuth,GoogleAuthProvider } from 'firebase/auth'
 import { app } from '../../../firebase';
 import { useDispatch} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { signinSuccess,signinFailure,signinStart } from '../../redux/user/userSlice'
+import { userContext } from '../userContext';
 
 export default function Oauth() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { BackEndUrl } = useContext(userContext)
   const googleAuthendicator =async () => {
     try{
     const provider =new GoogleAuthProvider();
@@ -16,7 +18,7 @@ export default function Oauth() {
     console.log(result)
     dispatch(signinStart())
     const userAuth = await fetch(
-      "https://mern-estate-k37d.onrender.com/api/auth/google",
+      `${BackEndUrl}/api/auth/google`,
       {
         method: "POST",
         headers: {
