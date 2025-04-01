@@ -21,7 +21,7 @@ export default function SignUp() {
     e.preventDefault();
     try{
       const res = await fetch(
-        "/api/auth/signup",
+        "https://mern-estate-k37d.onrender.com/api/auth/signup",
         {
           method: "POST",
           headers: {
