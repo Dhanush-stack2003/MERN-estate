@@ -26,7 +26,7 @@ export const signin = async (req, res, next) => {
     if (!passwordCheck) return next(ErrorHandler(404, "wrong credentials!"));
     const jwtToken = jwt.sign({ id: validUser._id }, process.env.JSON_TOKEN);
     const { password: pass, ...rest } = validUser._doc;
-    res.cookie("ACCESS_TOKEN", jwtToken, { httpOnly: true });
+    res.cookie("ACCESS_TOKEN", jwtToken, { httpOnly:true,secure:true,sameSite:'None' });
     res.status(200);
     res.json(rest);
     console.log(rest)
@@ -41,7 +41,7 @@ export const google = async(req,res,next) => {
     if(userVerify){
       const jwtToken = jwt.sign({id:userVerify._id},process.env.JSON_TOKEN);
       const {password:pass,...rest} = userVerify._doc;
-      res.cookie('ACCESS_TOKEN',jwtToken,{httpOnly:true})
+      res.cookie('ACCESS_TOKEN',jwtToken,{httpOnly:true,secure:true,sameSite:'None'})
       res.status(201)
       res.json(rest)
     }else{
@@ -57,7 +57,7 @@ export const google = async(req,res,next) => {
     await user.save();
     const jwtToken = jwt.sign({id:user._id},process.env.JSON_TOKEN)
     const {password:pass,...rest} = user._doc
-    res.cookie('ACCESS_TOKEN',jwtToken,{ httpOnly:true })
+    res.cookie('ACCESS_TOKEN',jwtToken,{ httpOnly:true,secure:true,sameSite:'None' })
     res.status(200)
     res.json(rest)
   }
