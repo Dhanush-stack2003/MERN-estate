@@ -24,7 +24,7 @@ export const signin = async (req, res, next) => {
     if (!validUser) return next(ErrorHandler(401, "user not found!"));
     const passwordCheck = bcrypt.compareSync(password, validUser.password);
     if (!passwordCheck) return next(ErrorHandler(404, "wrong credentials!"));
-    const jwtToken = jwt.sign({ id: validUser._id }, process.env.JSON_TOKEN);
+    const jwtToken = jwt.sign({ id: validUser._id }, process.env.JSON_TOKEN,{expiresIn:"15m"});
     const { password: pass, ...rest } = validUser._doc;
     res.cookie("ACCESS_TOKEN", jwtToken, { httpOnly:true,secure:true,sameSite:'None' });
     res.status(200);
@@ -39,7 +39,7 @@ export const google = async(req,res,next) => {
   try{
     const userVerify =await User.findOne({email:req.body.email})
     if(userVerify){
-      const jwtToken = jwt.sign({id:userVerify._id},process.env.JSON_TOKEN);
+      const jwtToken = jwt.sign({id:userVerify._id},process.env.JSON_TOKEN,{expiresIn:"15m"});
       const {password:pass,...rest} = userVerify._doc;
       res.cookie('ACCESS_TOKEN',jwtToken,{httpOnly:true,secure:true,sameSite:'None'})
       res.status(201)
@@ -55,7 +55,7 @@ export const google = async(req,res,next) => {
       image:req.body.image
     });
     await user.save();
-    const jwtToken = jwt.sign({id:user._id},process.env.JSON_TOKEN)
+    const jwtToken = jwt.sign({id:user._id},process.env.JSON_TOKEN,{expiresIn:"15m"})
     const {password:pass,...rest} = user._doc
     res.cookie('ACCESS_TOKEN',jwtToken,{ httpOnly:true,secure:true,sameSite:'None' })
     res.status(200)
